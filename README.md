@@ -2,6 +2,8 @@
 
 Express Frappe 🥤 - build express application another way.
 
+[![Coverage Status](https://coveralls.io/repos/github/chanlito/express-frappe/badge.svg?branch=master)](https://coveralls.io/github/chanlito/express-frappe?branch=master)
+
 ## Setup
 
 ```bash

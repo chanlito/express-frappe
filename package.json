@@ -20,8 +20,9 @@
     "npm": ">=5.0.0"
   },
   "scripts": {
+    "build": "npx tsc",
     "clean": "rm -rf dist",
-    "prepare": "npm run clean && npx tsc",
+    "prepare": "npm run clean && npm run build",
     "test": "nyc mocha -r ts-node/register -r source-map-support/register \"test/**/*.ts\""
   },
   "peerDependencies": {
