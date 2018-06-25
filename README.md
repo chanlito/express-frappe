@@ -2,6 +2,7 @@
 
 Express Frappe 🥤 - build express application another way.
 
+[![Build Status](https://travis-ci.org/chanlito/express-frappe.svg?branch=master)](https://travis-ci.org/chanlito/express-frappe)
 [![Coverage Status](https://coveralls.io/repos/github/chanlito/express-frappe/badge.svg?branch=master)](https://coveralls.io/github/chanlito/express-frappe?branch=master)
 
 ## Setup
