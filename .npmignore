@@ -1,0 +1,9 @@
+.DS_Store
+.editorconfig
+.nyc_output
+coverage
+node_modules
+src
+test
+tsconfig.json
+tslint.json
