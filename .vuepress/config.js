@@ -1,4 +1,5 @@
 module.exports = {
+  base: 'express-frappe',
   port: 9000,
   serviceWorker: true,
   title: 'Express Frappe 🥤',
