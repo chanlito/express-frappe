@@ -23,6 +23,8 @@
     "build": "npx tsc",
     "clean": "rm -rf dist",
     "coverage": "nyc mocha && cat ./coverage/lcov.info | coveralls",
+    "docs:dev": "vuepress dev",
+    "docs:build": "vuepress build",
     "prepare": "npm run clean && npm run build",
     "test": "mocha",
     "test:watch": "mocha --watch --watch-extensions ts"
@@ -56,7 +58,8 @@
     "tslint": "^5.10.0",
     "tslint-config-airbnb": "^5.9.2",
     "tslint-config-prettier": "^1.13.0",
-    "typescript": "^2.9.2"
+    "typescript": "^2.9.2",
+    "vuepress": "^0.10.2"
   },
   "nyc": {
     "include": [

@@ -1,6 +1,6 @@
 # Express Frappe
 
-Express Frappe 🥤 - build express application another way.
+Express Frappe 🥤 - construir la aplicación express de otra manera.
 
 [![Open Source Love](https://badges.frapsoft.com/os/v3/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
@@ -11,13 +11,13 @@ Express Frappe 🥤 - build express application another way.
 
 [[toc]]
 
-## Setup
+## Instalar
 
 ```bash
 npm install express-frappe
 ```
 
-## How to use
+## Cómo utilizar
 
 ```ts
 import { ExpressFrappe } from 'express-frappe';
@@ -30,39 +30,39 @@ const app = new ExpressFrappe({
   routes: {
     'GET /': handler1,
     'GET /v1/posts': [authenticate('admin', 'user'), handler2],
-    'POST /v1/posts': [authenticate('admin'), handler3], // use your imagination!
+    'POST /v1/posts': [authenticate('admin'), handler3], // use su imaginación!
   },
   io: {
     '/': {
       use(io, socket, next) {
-        // do your middleware stuffs (check auth maybe?)
+        // haz tus cosas de middleware (comprueba autorización tal vez?)
         next();
       },
       onConnect(io, socket) {
-        // will called when a socket successfully connected
+        // se llamará cuando un `socket` se ha conectado con éxito
       },
       onDisconnect(io, socket) {
-        // will called when a socket gets disconnected
+        // se llamará cuando un `socket` se desconecta
       },
       onMessage(io, socket, data: any, cb) {
-        // `onMessage` here is a custom event
+        // `onMessage` aquí es un evento personalizado
       },
     },
     '/with-namespace': {
-      use(io, socket, next) {}, // don't forget to call `next()`
+      use(io, socket, next) {}, // no te olvides de llamar a `next()`
       onConnect(io, socket) {},
       onDisconnect(io, socket) {},
       onHelloWithNamespace(io, socket, data, cb) {},
     },
   },
   errorHandler: (err, req, res, next) => {
-    // handle your shit together!
+    // no olvides de manejar tus errores!
   },
 });
 
 app.getHttpServer().listen(3000, () => '🚀 Ready to serve!');
 ```
 
-## License
+## Licencia
 
 MIT
