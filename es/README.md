@@ -3,6 +3,8 @@
 Express Frappe 🥤 - construir la aplicación express de otra manera.
 
 [![Open Source Love](https://badges.frapsoft.com/os/v3/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
+[![Star Repo](http://githubbadges.com/star.svg?user=chanlito&repo=express-frappe&style=flat)](https://github.com/chanlito/express-frappe)
+[![Fork Repo](http://githubbadges.com/fork.svg?user=chanlito&repo=express-frappe&style=flat)](https://github.com/chanlito/express-frappe/fork)
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 [![npm version](https://badge.fury.io/js/express-frappe.svg)](https://badge.fury.io/js/express-frappe)
 [![Build Status](https://travis-ci.org/chanlito/express-frappe.svg?branch=master)](https://travis-ci.org/chanlito/express-frappe)
