@@ -22,7 +22,7 @@ npm install express-frappe
 ```ts
 import { ExpressFrappe } from 'express-frappe';
 
-const app = new ExpressFrappe({
+const { server } = new ExpressFrappe({
   bodyParser: true,
   cors: true,
   morgan: true,
@@ -60,7 +60,7 @@ const app = new ExpressFrappe({
   },
 });
 
-app.getHttpServer().listen(3000, () => '🚀 Ready to serve!');
+server.listen(3000, () => '🚀 Ready to serve!');
 ```
 
 ## Licencia
