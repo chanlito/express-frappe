@@ -1,9 +1,10 @@
 import * as bodyParserMiddleware from 'body-parser';
 import * as corsMiddleware from 'cors';
 import * as express from 'express';
-import * as http from 'http';
 import * as expressRouters from 'express-routers';
+import * as http from 'http';
 import * as morganMiddleware from 'morgan';
+import { ServeStaticOptions } from 'serve-static';
 import * as socketIo from 'socket.io';
 
 export class ExpressFrappe {
@@ -19,14 +20,21 @@ export class ExpressFrappe {
       middleware,
       morgan,
       routes,
+      static: serveStatic,
     } = config;
 
-    if (morgan) {
+    if (morgan === true || morgan === undefined) {
       this.app.use(morganMiddleware('dev'));
     }
 
-    if (cors) {
+    if (cors === true || cors === undefined) {
       this.app.use(cors === true ? corsMiddleware() : corsMiddleware(cors));
+    }
+
+    if (typeof serveStatic === 'string') {
+      this.app.use(express.static(serveStatic));
+    } else if (typeof serveStatic === 'object') {
+      this.app.use(express.static(serveStatic.root, serveStatic.options));
     }
 
     if (typeof bodyParser === 'object') {
@@ -41,7 +49,7 @@ export class ExpressFrappe {
           ),
         );
       }
-    } else if (bodyParser) {
+    } else if (bodyParser === true || bodyParser === undefined) {
       this.app.use(express.json());
       this.app.use(express.urlencoded({ extended: false }));
     }
@@ -94,14 +102,6 @@ export class ExpressFrappe {
       });
     }
   }
-
-  getExpress() {
-    return this.app;
-  }
-
-  getHttpServer() {
-    return this.server;
-  }
 }
 
 export interface ExpressFrappeConfig {
@@ -117,6 +117,7 @@ export interface ExpressFrappeConfig {
   middleware?: express.RequestHandler[];
   morgan?: boolean;
   routes?: expressRouters.RouteConfig[] | expressRouters.RouteConfigAlternative;
+  static?: string | { root: string; options?: ServeStaticOptions };
 }
 
 export interface ExpressFrappeSocketIOConfig {
