@@ -1,9 +1,12 @@
+.coveralls.yml
 .DS_Store
 .editorconfig
 .nyc_output
+.travis.yml
 .vuepress
-.coveralls.yml
 coverage
+deploy-docs.sh
+es
 node_modules
 src
 test
