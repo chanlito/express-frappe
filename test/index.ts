@@ -1,38 +1,37 @@
 import { expect } from 'chai';
 import { NextFunction, Request, Response } from 'express';
-import * as request from 'supertest';
+import { Server } from 'http';
 import * as io from 'socket.io-client';
+import * as request from 'supertest';
+import * as path from 'path';
 
 import { ExpressFrappe } from '../src';
 
 describe('Running Tests', () => {
   it('#1', async () => {
-    const middleware1 = (req: Request, res: Response, next: NextFunction) => {
-      (req as any).uniqueness = true;
-      next();
-    };
-
-    const routes1 = {
-      'GET /': (req: Request, res: Response) => {
-        res.json({
-          message: 'Hello World!',
-          uniqueness: (req as any).uniqueness,
-        });
-      },
-    };
-
-    const app1 = new ExpressFrappe({
+    const { app } = new ExpressFrappe({
       bodyParser: {
         json: true,
         urlencoded: true,
       },
       cors: true,
-      middleware: [middleware1],
+      middleware: [
+        (req: Request, res: Response, next: NextFunction) => {
+          (req as any).uniqueness = true;
+          next();
+        },
+      ],
       morgan: true,
-      routes: routes1,
+      routes: {
+        'GET /': (req: Request, res: Response) => {
+          res.json({
+            message: 'Hello World!',
+            uniqueness: (req as any).uniqueness,
+          });
+        },
+      },
     });
-
-    const res = await request(app1.getExpress())
+    const res = await request(app)
       .get('/')
       .expect(200);
     expect(res.body.message).to.equal('Hello World!');
@@ -40,15 +39,7 @@ describe('Running Tests', () => {
   });
 
   it('#2', async () => {
-    const routes2 = {
-      'GET /': (req: Request, res: Response) => {
-        res.json({
-          message: 'Hello World 2!',
-        });
-      },
-    };
-
-    const app2 = new ExpressFrappe({
+    const { app } = new ExpressFrappe({
       bodyParser: {
         json: {
           strict: false,
@@ -60,47 +51,45 @@ describe('Running Tests', () => {
       cors: false,
       middleware: [],
       morgan: false,
-      routes: routes2,
+      routes: {
+        'GET /': (req: Request, res: Response) => {
+          res.json({
+            message: 'Hello World 2!',
+          });
+        },
+      },
     });
-    const res = await request(app2.getExpress())
+    const res = await request(app)
       .get('/')
       .expect(200);
     expect(res.body.message).to.equal('Hello World 2!');
   });
 
   it('#3', async () => {
-    const app3 = new ExpressFrappe({});
-
-    app3
-      .getExpress()
-      .get('/', (req, res) => res.json({ message: 'Hello World 3!' }));
-
-    const res = await request(app3.getHttpServer())
+    const { app } = new ExpressFrappe({});
+    app.get('/', (req, res) => res.json({ message: 'Hello World 3!' }));
+    const res = await request(app)
       .get('/')
       .expect(200);
     expect(res.body.message).to.equal('Hello World 3!');
   });
 
   it('#4', async () => {
-    const app4 = new ExpressFrappe({
+    const { app } = new ExpressFrappe({
       bodyParser: {},
       cors: {
         origin: ['*'],
       },
     });
-
-    app4
-      .getExpress()
-      .get('/', (req, res) => res.json({ message: 'Hello World 4!' }));
-
-    const res = await request(app4.getExpress())
+    app.get('/', (req, res) => res.json({ message: 'Hello World 4!' }));
+    const res = await request(app)
       .get('/')
       .expect(200);
     expect(res.body.message).to.equal('Hello World 4!');
   });
 
   it('#5', async () => {
-    const app5 = new ExpressFrappe({
+    const { app } = new ExpressFrappe({
       routes: [
         {
           method: 'GET',
@@ -109,15 +98,14 @@ describe('Running Tests', () => {
         },
       ],
     });
-
-    const res = await request(app5.getExpress())
+    const res = await request(app)
       .get('/')
       .expect(200);
     expect(res.body.message).to.equal('Hello World 5!');
   });
 
   it('#6', async () => {
-    const app6 = new ExpressFrappe({
+    const { app } = new ExpressFrappe({
       routes: [
         {
           method: 'GET',
@@ -131,15 +119,14 @@ describe('Running Tests', () => {
         res.status(500).json({ message: err.message });
       },
     });
-
-    const res = await request(app6.getExpress())
+    const res = await request(app)
       .get('/')
       .expect(500);
     expect(res.body.message).to.equal('Oh no!');
   });
 
   it('#7', async () => {
-    const app7 = new ExpressFrappe({
+    const { app } = new ExpressFrappe({
       bodyParser: true,
       routes: [
         {
@@ -151,19 +138,18 @@ describe('Running Tests', () => {
         },
       ],
     });
-
-    const res = await request(app7.getExpress())
+    const res = await request(app)
       .post('/')
       .send({ username: 'Chanlito' })
       .expect(201);
     expect(res.body.message).to.equal('Chanlito');
   });
 
-  describe('Testing Socket.IO', () => {
-    let app8: ExpressFrappe;
+  describe('Test Socket.IO', () => {
+    let server: Server;
 
     beforeEach(() => {
-      app8 = new ExpressFrappe({
+      server = new ExpressFrappe({
         morgan: true,
         io: {
           '/': {
@@ -201,15 +187,18 @@ describe('Running Tests', () => {
               );
             },
             onHelloWithNamespace(io, socket, data, cb) {
+              expect(socket.id).to.be.a('string');
+              expect(data.message).to.equal('With NSP');
+              expect(cb).to.be.a('function');
               cb(true);
             },
           },
         },
-      });
-      app8.getHttpServer().listen(9000);
+      }).server;
+      server.listen(9000);
     });
 
-    afterEach(done => app8.getHttpServer().close(() => done()));
+    afterEach(done => server.close(() => done()));
 
     it('#8', done => {
       const socket1 = io.connect('http://localhost:9000?q=awesome');
@@ -232,5 +221,30 @@ describe('Running Tests', () => {
         done();
       });
     });
+  });
+
+  describe('Test Serving Static', () => {
+    it('#9', async () => {
+      const { app } = new ExpressFrappe({
+        static: {
+          root: path.resolve(__dirname, 'public'),
+          options: { maxAge: 60 },
+        },
+      });
+      const res = await request(app)
+        .get('/')
+        .expect(200);
+      expect(res.text).to.be.a('string');
+    });
+  });
+
+  it('#10', async () => {
+    const { app } = new ExpressFrappe({
+      static: path.resolve(__dirname, 'public'),
+    });
+    const res = await request(app)
+      .get('/')
+      .expect(200);
+    expect(res.text).to.be.a('string');
   });
 });
