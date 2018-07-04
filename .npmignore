@@ -2,6 +2,7 @@
 .editorconfig
 .nyc_output
 .vuepress
+.coveralls.yml
 coverage
 node_modules
 src
